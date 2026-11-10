@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>國關論文猜猜看</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f2ea; --card:#fffdf8; --ink:#1f2328; --muted:#6b6f76; --line:#e2dccf;
+    --accent:#7a2e2e; --accent-soft:#f3e4df; --ok:#2f6b3a; --ok-soft:#e1efe3; --bad:#9a3b2a; --bad-soft:#f6e1dc;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#17181a; --card:#212226; --ink:#ece9e3; --muted:#9a9ca1; --line:#34363b;
+      --accent:#e0a39a; --accent-soft:#3a2a28; --ok:#8fcf99; --ok-soft:#203126; --bad:#f0a090; --bad-soft:#3a2522; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.6}
+  .wrap{max-width:680px;margin:0 auto;padding:20px 16px 48px}
+  header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
+  h1{font-family:"Noto Serif TC",serif;font-size:1.35rem;margin:0;letter-spacing:.02em}
+  .stat{font-size:.85rem;color:var(--muted);white-space:nowrap}
+  .stat b{color:var(--ink);font-size:1rem}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .label{font-size:.75rem;letter-spacing:.12em;color:var(--accent);font-weight:700;text-transform:uppercase;margin-bottom:6px}
+  .abstract{font-family:"Noto Serif TC",serif;font-size:1.02rem;margin:0}
+  .hint{margin-top:12px;font-size:.85rem;color:var(--muted)}
+  .hint button{font:inherit;background:none;border:1px dashed var(--line);color:var(--muted);border-radius:8px;padding:4px 10px;cursor:pointer}
+  .hint .reveal{color:var(--ink)}
+  h2{font-size:.95rem;margin:22px 0 8px}
+  .opts{display:grid;gap:8px}
+  .opt{font:inherit;text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:11px 13px;cursor:pointer;font-size:.92rem;line-height:1.45}
+  .opt:hover:not(:disabled){border-color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ink)}
+  .opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+  .opt.dim{opacity:.5}
+  .result{margin-top:18px;padding:14px;border-radius:12px;background:var(--accent-soft);display:none}
+  .result.show{display:block}
+  .result .t{font-family:"Noto Serif TC",serif;font-weight:700}
+  .result .m{font-size:.85rem;color:var(--muted)}
+  .btn{font:inherit;font-weight:700;background:var(--accent);color:var(--card);border:0;border-radius:10px;padding:11px 18px;cursor:pointer;margin-top:14px}
+  .center{text-align:center}
+  .big{font-family:"Noto Serif TC",serif;font-size:2.4rem;margin:6px 0}
+  .review{text-align:left;margin-top:16px;font-size:.85rem}
+  .review li{margin-bottom:8px}
+  .note{font-size:.75rem;color:var(--muted);margin-top:22px}
+  .pts{font-weight:700}
+.in{width:100%;font:inherit;font-size:16px;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+  .in:focus{outline:none;border-color:var(--accent)}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .btn.ghost{background:none;color:var(--muted);border:1px solid var(--line)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .cmp{width:100%;border-collapse:collapse;margin-top:8px;font-size:.88rem}
+  .cmp th{text-align:left;vertical-align:top;width:3.5em;color:var(--muted);font-weight:500;padding:6px 0}
+  .cmp td{padding:6px 0;border-top:1px solid var(--line)}
+  .ok{color:var(--ok);font-weight:700}.half{color:var(--accent);font-weight:700}.no{color:var(--bad);font-weight:700}
+  .tag{display:inline-block;font-size:.7rem;padding:0 6px;border-radius:6px;background:var(--card);border:1px solid var(--line);color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>國關論文猜猜看</h1>
+    <div class="stat">第 <b id="rnd">1</b>/<span id="tot">10</span> 題 · 分數 <b id="score">0</b></div>
+  </header>
+  <main id="app"></main>
+  <p class="note">題庫：2016–2024 年間發表於國關／安全研究期刊的高引用論文，共 26 篇。2021 年以前的篇目 Google Scholar 引用數普遍逾 200；2022 年後的新作是同期引用最多的一批，但因發表時間較短，未必都已達 200。引用數未經即時查證。摘要為重新改寫的中文概述，非原文摘要。計分：標題（或冒號前的主標題）關鍵字吻合 75% 以上 +2、40% 以上 +1；作者全猜中 +2、猜中部分 +1；拼錯一個字母也算對；看提示 −1。</p>
+</div>
+
+<script>
+const DB = [
+ {t:"Bound to Fail: The Rise and Fall of the Liberal International Order", a:"John J. Mearsheimer", j:"International Security", y:2019,
+  s:"作者認為冷戰後由美國主導的自由主義國際秩序從一開始就注定失敗。推動民主擴散、超全球化與擴大國際制度的政策，反而激起民族主義與主權反彈，並助長中國崛起。未來世界將走向由大國各自領導、相互競爭的有限秩序。"},
+ {t:"Weaponized Interdependence: How Global Economic Networks Shape State Coercion", a:"Henry Farrell & Abraham L. Newman", j:"International Security", y:2019,
+  s:"全球金融與通訊網絡並非扁平分散，而是呈現少數樞紐高度集中的結構。掌握這些樞紐的國家可以藉由「全景監控」取得情報，或以「咽喉點」切斷對手的使用。文章以 SWIFT、美元清算與網際網路基礎設施說明這種新型強制力。"},
+ {t:"The End of Liberal International Order?", a:"G. John Ikenberry", j:"International Affairs", y:2018,
+  s:"文章探討戰後自由主義秩序是否走到盡頭。作者指出危機主要源自秩序內部——西方民主國家的社會契約鬆動與美國領導意願下降——而非外部挑戰者。但開放、規則為基礎的合作邏輯仍具韌性，未來可能以較低調的形式延續。"},
+ {t:"Challenges to the Liberal Order: Reflections on International Organization", a:"David A. Lake, Lisa L. Martin & Thomas Risse", j:"International Organization", y:2021,
+  s:"這篇是期刊 75 週年特刊的導論。作者區分自由秩序的經濟、政治與制度面向，梳理來自內部民粹主義與外部崛起強權的雙重挑戰，並反思學界自身理論在理解秩序變遷上的盲點。"},
+ {t:"The Behavioral Revolution and International Relations", a:"Emilie M. Hafner-Burton, Stephan Haggard, David A. Lake & David G. Victor", j:"International Organization", y:2017,
+  s:"行為經濟學與心理學的發現——有限理性、偏誤、偏好不穩定——對國關的理性選擇模型構成挑戰。作者盤點這波研究，主張關鍵在於辨識何時、在哪些菁英或決策情境下行為偏差會系統性地影響國際結果。"},
+ {t:"Artificial Intelligence, International Competition, and the Balance of Power", a:"Michael C. Horowitz", j:"Texas National Security Review", y:2018,
+  s:"人工智慧更像是電力或內燃機這類「賦能技術」，而非單一武器。作者分析 AI 會如何影響軍事權力擴散：若關鍵在商業部門與資料，後進國家可能較快追趕；若需要大規模組織轉型，既有強權的優勢反而會被放大。"},
+ {t:"China in a World of Orders: Rethinking Compliance and Challenge in Beijing's International Relations", a:"Alastair Iain Johnston", j:"International Security", y:2019,
+  s:"「中國挑戰自由國際秩序」是個過於籠統的說法。作者把秩序拆成軍事、政治發展、社會、貿易、金融、環境等多個領域，逐一檢視中國的行為，發現在許多領域中國是支持甚至受益者，只有少數領域呈現明顯挑戰。"},
+ {t:"Domestic Politics, China's Rise, and the Future of the Liberal International Order", a:"Jessica Chen Weiss & Jeremy L. Wallace", j:"International Organization", y:2021,
+  s:"中國對國際秩序的立場，取決於其國內威權統治的需求。作者主張北京主要在意讓世界「對威權安全」，而非輸出自身模式；它會反對威脅政權存續的規範，同時對有利於國內成長的經濟制度保持參與。"},
+ {t:"The Song Remains the Same: International Relations After COVID-19", a:"Daniel W. Drezner", j:"International Organization", y:2020,
+  s:"許多人預言新冠疫情將徹底改變世界政治。作者回顧歷史上的大流行病，認為疫情對國際關係的影響其實有限，比較可能加速既有趨勢——大國競爭、民族主義、全球治理疲弱——而非創造全新格局。"},
+ {t:"After Liberal Hegemony: The Advent of a Multiplex World Order", a:"Amitav Acharya", j:"Ethics & International Affairs", y:2017,
+  s:"美國主導的自由霸權正在退場，但取而代之的不會是單純的多極體系。作者以「多廳影城」作比喻，描述一個由多元行為者、多種秩序觀與區域安排並存的世界，強調非西方力量與區域主義的角色。"},
+ {t:"International Organizations in a New Era of Populist Nationalism", a:"Mark Copelovitch & Jon C. W. Pevehouse", j:"Review of International Organizations", y:2019,
+  s:"英國脫歐與川普當選代表民粹民族主義對多邊主義的反撲。這篇特刊導論檢視民粹主義者為何敵視國際組織、他們能造成多大破壞，以及國際組織在制度設計上可能如何回應。"},
+ {t:"Contested World Order: The Delegitimation of International Governance", a:"Liesbet Hooghe, Tobias Lenz & Gary Marks", j:"Review of International Organizations", y:2019,
+  s:"國際組織權威擴張後，正當性問題隨之政治化。作者從後功能主義視角出發，主張當國際治理觸及國家認同與主權時，民族主義動員會引發反彈，使國際組織的正當性遭到侵蝕。"},
+ {t:"The New Era of Counterforce: Technological Change and the Future of Nuclear Deterrence", a:"Keir A. Lieber & Daryl G. Press", j:"International Security", y:2017,
+  s:"精準打擊與感測技術的進步，正在削弱核武報復力量的生存性。作者指出藏匿、加固與機動等傳統防護手段變得愈來愈脆弱，「相互保證毀滅」不再是理所當然，這將影響危機穩定與軍備競賽。"},
+ {t:"What Is the Cyber Offense-Defense Balance? Conceptions, Causes, and Assessment", a:"Rebecca Slayton", j:"International Security", y:2016,
+  s:"「網路空間攻擊占優」是廣為流傳的看法。作者提出以成本與效用評估攻防平衡的方法，強調組織能力與技能比技術本身更關鍵，並以震網病毒為例，說明攻擊方的實際成本遠比想像高。"},
+ {t:"The Logic of Coercion in Cyberspace", a:"Erica D. Borghard & Shawn W. Lonergan", j:"Security Studies", y:2017,
+  s:"網路手段能否用來脅迫對手？作者分析脅迫成功所需的條件——清楚傳達威脅、可信度、展示能力與保證——並指出網路行動的隱密性與一次性，使其在這些條件上先天不利，因此作為獨立脅迫工具的效果有限。"},
+ {t:"Why China Has Not Caught Up Yet: Military-Technological Superiority and the Limits of Imitation, Reverse Engineering, and Cyber Espionage", a:"Andrea Gilli & Mauro Gilli", j:"International Security", y:2019,
+  s:"許多人擔心網路竊密能讓後進國家迅速複製先進武器。作者以戰鬥機研發為例，指出現代武器系統的複雜度極高，關鍵在於難以竊取的隱性知識與工程經驗，因此模仿與逆向工程很難縮短軍事技術差距。"},
+ {t:"Struggles for Recognition: The Liberal International Order and the Merger of Its Discontents", a:"Rebecca Adler-Nissen & Ayşe Zarakol", j:"International Organization", y:2021,
+  s:"自由秩序的國內反對者與外部挑戰者看似毫無關聯，作者卻認為兩者共享一種「未被承認」的不滿。秩序內部階層化帶來的地位焦慮，讓民粹運動與修正主義國家在論述上彼此匯流。"},
+ {t:"Embedded Revisionism: Networks, Institutions, and Challenges to World Order", a:"Stacie E. Goddard", j:"International Organization", y:2018,
+  s:"崛起強權未必只會在體制外推翻秩序。作者用網絡理論說明：一個國家在既有制度網絡中的位置——是否居於樞紐、是否被孤立——決定了它會選擇在體制內修正、建立平行體制，或採取革命性挑戰。"},
+ {t:"Public Opinion and Decisions About Military Force in Democracies", a:"Michael Tomz, Jessica L. P. Weeks & Keren Yarhi-Milo", j:"International Organization", y:2020,
+  s:"民意真的會影響民主國家的用兵決策嗎？作者在以色列國會議員身上進行調查實驗，發現民意支持會顯著提高議員贊成動武的意願，主要機制是對選舉後果的顧慮，以及民意本身帶來的資訊與正當性。"},
+ {t:"The Power of Nations: Measuring What Matters", a:"Michael Beckley", j:"International Security", y:2018,
+  s:"GDP 與軍費等常用指標會嚴重誤判國家實力，因為它們只看總量、忽略維持人口與安全所需的成本。作者主張以「淨資源」衡量權力，並據此重新評估歷史上的大國競爭，以及美中之間的真實差距。"},
+ {t:"Why Russia Attacked Ukraine: Strategic Culture and Radicalized Narratives", a:"Elias Götz & Jørgen Staun", j:"Contemporary Security Policy", y:2022, recent:true,
+  s:"單看北約東擴或普丁個人都不足以解釋全面入侵。作者從俄羅斯的戰略文化切入：歷史上屢遭西方入侵造成的脆弱感，加上對周邊地區的勢力範圍意識，讓有限的西方舉動被解讀為生存威脅，並在菁英論述中逐步激進化，最終為戰爭創造了條件。"},
+ {t:"The Causes and Consequences of the Ukraine War", a:"John J. Mearsheimer", j:"Horizons", y:2022, recent:true,
+  s:"這篇由演講改寫的文章挑戰西方主流說法，主張美國把烏克蘭拉進北約、使其成為俄國邊境上的西方堡壘，才是危機的主因；俄國的動機是安全而非擴張。作者並警告戰爭可能長期化，甚至有升級為北約直接參戰或動用核武的風險。"},
+ {t:"Imperialism, Supremacy, and the Russian Invasion of Ukraine", a:"Kseniya Oksamytna", j:"Contemporary Security Policy", y:2023, recent:true,
+  s:"作者批評國關學界過度從大國安全競爭解讀這場戰爭，忽略了俄國菁英對烏克蘭根深蒂固的帝國式與優越感觀點。她主張正視帝國主義、結合後殖民研究與區域知識，才能理解俄國為何執意征服烏克蘭，以及為何多數觀察者低估了烏克蘭的抵抗。"},
+ {t:"Dual Use Deception: How Technology Shapes Cooperation in International Relations", a:"Jane Vaynman & Tristan A. Volpe", j:"International Organization", y:2023, recent:true,
+  s:"為什麼有些軍事技術容易達成軍控協議，有些卻幾乎不可能？作者指出關鍵在於技術的軍民兩用特性：當軍用與民用難以區分、又深度嵌入民間經濟時，查核就必須高度侵入，國家因此陷入「透明度與安全」的兩難，合作也就難以成形。"},
+ {t:"Three Worlds: The West, East and South and the Competition to Shape Global Order", a:"G. John Ikenberry", j:"International Affairs", y:2024, recent:true,
+  s:"俄烏戰爭把世界推向三個鬆散陣營：全球西方、全球東方與全球南方。它們不是嚴密的集團，而是對理想秩序各有主張的派系。作者認為東西雙方將競相爭取南方的支持，而西方若想維持核心地位，就必須調整自身、接納更多元的世界。"},
+ {t:"The Global Governance of Artificial Intelligence: Next Steps for Empirical and Normative Research", a:"Jonas Tallberg, Eva Erman, Markus Furendal, Johannes Geith, Mark Klamberg & Magnus Lundgren", j:"International Studies Review", y:2023, recent:true,
+  s:"政治學與國關對 AI 的研究多半聚焦在應用，較少關注正在形成的全球規範架構。作者提出一套研究議程：一方面以實證方法描繪並解釋 AI 如何在全球層次被治理、由誰推動；另一方面以規範理論檢驗這些安排是否符合正義與民主的標準。"}
+];
+
+const ROUNDS = 10;
+let deck=[], i=0, score=0, hintUsed=false, picked={t:null,a:null}, log=[];
+const $ = id => document.getElementById(id);
+const shuffle = a => { a=[...a]; for(let k=a.length-1;k>0;k--){const r=Math.floor(Math.random()*(k+1));[a[k],a[r]]=[a[r],a[k]];} return a; };
+const esc = s => s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function start(){
+  deck = shuffle(DB).slice(0, ROUNDS); i=0; score=0; log=[];
+  $("tot").textContent = ROUNDS; render();
+}
+
+const STOP=new Set("the a an of and in to for on how what is are its after about from with into beyond than why when does do".split(" "));
+const norm=x=>x.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/ı/g,"i").replace(/ø/g,"o").replace(/ß/g,"ss").toLowerCase();
+function lev(a,b){const m=a.length,n=b.length;if(Math.abs(m-n)>1)return 2;const d=Array.from({length:m+1},(_,r)=>[r]);for(let c=1;c<=n;c++)d[0][c]=c;
+  for(let r=1;r<=m;r++)for(let c=1;c<=n;c++)d[r][c]=Math.min(d[r-1][c]+1,d[r][c-1]+1,d[r-1][c-1]+(a[r-1]===b[c-1]?0:1));return d[m][n];}
+const close=(w,u)=>w===u||(w.length>=5&&u.length>=5&&(lev(w,u)<=1||w.slice(0,6)===u.slice(0,6)));
+const words=x=>norm(x).replace(/-/g," ").split(/[^a-z0-9]+/).filter(w=>w.length>2&&!STOP.has(w)).map(w=>w.replace(/s$/,""));
+
+function ratio(guessWords,t){const key=[...new Set(words(t))];return key.filter(w=>guessWords.some(u=>close(w,u))).length/key.length;}
+function scoreTitle(guess,t){
+  const g=words(guess); if(!g.length) return {pts:0,r:0};
+  const main=t.split(":")[0], r=Math.max(ratio(g,t), main!==t?ratio(g,main):0);
+  return {pts:r>=.75?2:r>=.4?1:0, r};
+}
+function surnames(a){return a.split(/,|&/).map(x=>x.trim()).filter(Boolean).map(n=>norm(n.split(/\s+/).pop()).replace(/[^a-z]/g,""));}
+function scoreAuthor(guess,a){
+  const sn=surnames(a), g=norm(guess), compact=g.replace(/[^a-z]/g,""), toks=g.replace(/-/g,"").split(/[^a-z]+/).filter(Boolean);
+  const hit=sn.filter(s=>(s.length>=4&&compact.includes(s))||toks.some(u=>close(s,u))).length;
+  return {pts:hit===sn.length?2:hit>0?1:0, hit, n:sn.length};
+}
+
+function render(){
+  const it = deck[i]; hintUsed=false;
+  $("rnd").textContent=i+1; $("score").textContent=score;
+  $("app").innerHTML = `
+    <div class="card">
+      <div class="label">摘要</div>
+      <p class="abstract">${esc(it.s)}</p>
+      <div class="hint" id="hint"><button id="hintBtn">看提示：期刊與年份（−1）</button></div>
+    </div>
+    <form id="f" autocomplete="off">
+      <h2>標題（英文，主標題對就算全對）</h2>
+      <input class="in" id="gT" placeholder="例如：Weaponized Interdependence…" autocapitalize="off" spellcheck="false">
+      <h2>作者（姓氏即可，多位作者用逗號分隔）</h2>
+      <input class="in" id="gA" placeholder="例如：Farrell, Newman" autocapitalize="off" spellcheck="false">
+      <div class="row"><button class="btn" type="submit">送出</button><button class="btn ghost" type="button" id="skip">放棄，看答案</button></div>
+    </form>
+    <div class="result" id="res"></div>`;
+  $("hintBtn").onclick = () => { hintUsed=true; $("hint").innerHTML = `<span class="reveal">${esc(it.j)}，${it.y}</span>`; };
+  $("f").onsubmit = e => { e.preventDefault(); finishRound(it, $("gT").value, $("gA").value); };
+  $("skip").onclick = () => finishRound(it, "", "");
+  $("gT").focus({preventScroll:true});
+}
+
+const verdict=p=>p===2?'<span class="ok">✓ 正確</span>':p===1?'<span class="half">◐ 部分正確</span>':'<span class="no">✗</span>';
+
+function finishRound(it, gT, gA){
+  const T=scoreTitle(gT,it.t), A=scoreAuthor(gA,it.a);
+  let pts = T.pts + A.pts - (hintUsed?1:0);
+  score += pts; $("score").textContent=score;
+  log.push({it, tp:T.pts, ap:A.pts, pts});
+  document.querySelectorAll("#f input, #f button").forEach(x=>x.disabled=true);
+  const msg = T.pts+A.pts===4 ? "全對！" : T.pts+A.pts>0 ? "有猜到一些" : "這題沒猜中";
+  const res = $("res");
+  res.innerHTML = `<div><b>${msg}</b> <span class="pts">${pts>=0?"+":""}${pts} 分</span></div>
+    <table class="cmp">
+      <tr><th>標題</th><td>${gT.trim()?esc(gT):'<span class="m">（未作答）</span>'}<br>${verdict(T.pts)} <span class="m">關鍵字吻合 ${Math.round(T.r*100)}%</span></td></tr>
+      <tr><th>作者</th><td>${gA.trim()?esc(gA):'<span class="m">（未作答）</span>'}<br>${verdict(A.pts)} <span class="m">猜中 ${A.hit}/${A.n} 位</span></td></tr>
+    </table>
+    <div class="label" style="margin-top:12px">正確答案</div>
+    <div class="t">${esc(it.t)}</div>
+    <div class="m">${esc(it.a)} · <i>${esc(it.j)}</i>, ${it.y}${it.recent?' · <span class="tag">2022 後新作</span>':''}</div>
+    <button class="btn" id="next">${i+1<ROUNDS?"下一題":"看結果"}</button>`;
+  res.classList.add("show");
+  $("next").onclick = () => { i++; i<ROUNDS ? render() : end(); window.scrollTo({top:0,behavior:"smooth"}); };
+  $("next").focus({preventScroll:true});
+  res.scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+
+function end(){
+  const max = ROUNDS*4, pct = score/max;
+  const title = pct>=.85?"國關期刊活字典":pct>=.6?"資深研究生":pct>=.35?"文獻回顧進行中":"該去圖書館了";
+  const mk=p=>p===2?"✓":p===1?"◐":"✗";
+  $("app").innerHTML = `<div class="card center">
+    <div class="label">最終成績</div>
+    <div class="big">${score} / ${max}</div>
+    <div><b>${title}</b></div>
+    <ol class="review">${log.map(l=>`<li>${mk(l.tp)}標題 ${mk(l.ap)}作者 — <i>${esc(l.it.t)}</i>（${esc(l.it.a)}）</li>`).join("")}</ol>
+    <button class="btn" id="again">再玩一輪</button></div>`;
+  $("again").onclick = start;
+}
+
+start();
+</script>
+</body>
+</html>
