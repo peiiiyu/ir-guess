@@ -4,68 +4,93 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>國關論文猜猜看</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f6f2ea; --card:#fffdf8; --ink:#1f2328; --muted:#6b6f76; --line:#e2dccf;
-    --accent:#7a2e2e; --accent-soft:#f3e4df; --ok:#2f6b3a; --ok-soft:#e1efe3; --bad:#9a3b2a; --bad-soft:#f6e1dc;
+    --bg:#fff6ec; --bg2:#ffe9f0; --card:#ffffff; --ink:#4a3b52; --muted:#9a8aa3; --line:#f1dde6;
+    --pink:#ff8fb1; --pink-soft:#ffe3ec; --mint:#7fd8be; --mint-soft:#dcf7ee; --sun:#ffc857; --sun-soft:#fff3d1;
+    --lav:#b9a7ff; --lav-soft:#eee9ff; --shadow:0 6px 0 #f3d6e0;
   }
   @media (prefers-color-scheme: dark){
-    :root{ --bg:#17181a; --card:#212226; --ink:#ece9e3; --muted:#9a9ca1; --line:#34363b;
-      --accent:#e0a39a; --accent-soft:#3a2a28; --ok:#8fcf99; --ok-soft:#203126; --bad:#f0a090; --bad-soft:#3a2522; }
+    :root{ --bg:#2a2233; --bg2:#33283d; --card:#3a2f45; --ink:#f6eef9; --muted:#bba9c6; --line:#4d4059;
+      --pink-soft:#5a3446; --mint-soft:#284a42; --sun-soft:#54472a; --lav-soft:#3f3860; --shadow:0 6px 0 #241c2c; }
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.6}
-  .wrap{max-width:680px;margin:0 auto;padding:20px 16px 48px}
-  header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
-  h1{font-family:"Noto Serif TC",serif;font-size:1.35rem;margin:0;letter-spacing:.02em}
-  .stat{font-size:.85rem;color:var(--muted);white-space:nowrap}
-  .stat b{color:var(--ink);font-size:1rem}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
-  .label{font-size:.75rem;letter-spacing:.12em;color:var(--accent);font-weight:700;text-transform:uppercase;margin-bottom:6px}
-  .abstract{font-family:"Noto Serif TC",serif;font-size:1.02rem;margin:0}
-  .hint{margin-top:12px;font-size:.85rem;color:var(--muted)}
-  .hint button{font:inherit;background:none;border:1px dashed var(--line);color:var(--muted);border-radius:8px;padding:4px 10px;cursor:pointer}
-  .hint .reveal{color:var(--ink)}
-  h2{font-size:.95rem;margin:22px 0 8px}
-  .opts{display:grid;gap:8px}
-  .opt{font:inherit;text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:11px 13px;cursor:pointer;font-size:.92rem;line-height:1.45}
-  .opt:hover:not(:disabled){border-color:var(--accent)}
-  .opt:disabled{cursor:default}
-  .opt.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ink)}
-  .opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
-  .opt.dim{opacity:.5}
-  .result{margin-top:18px;padding:14px;border-radius:12px;background:var(--accent-soft);display:none}
-  .result.show{display:block}
-  .result .t{font-family:"Noto Serif TC",serif;font-weight:700}
-  .result .m{font-size:.85rem;color:var(--muted)}
-  .btn{font:inherit;font-weight:700;background:var(--accent);color:var(--card);border:0;border-radius:10px;padding:11px 18px;cursor:pointer;margin-top:14px}
-  .center{text-align:center}
-  .big{font-family:"Noto Serif TC",serif;font-size:2.4rem;margin:6px 0}
-  .review{text-align:left;margin-top:16px;font-size:.85rem}
-  .review li{margin-bottom:8px}
-  .note{font-size:.75rem;color:var(--muted);margin-top:22px}
-  .pts{font-weight:700}
-.in{width:100%;font:inherit;font-size:16px;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
-  .in:focus{outline:none;border-color:var(--accent)}
-  .row{display:flex;gap:10px;flex-wrap:wrap}
-  .btn.ghost{background:none;color:var(--muted);border:1px solid var(--line)}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:"Huninn","Noto Sans TC",system-ui,sans-serif;line-height:1.65;
+    background:radial-gradient(circle at 10% 0%,var(--bg2) 0,transparent 40%),radial-gradient(circle at 100% 30%,var(--lav-soft) 0,transparent 35%),var(--bg);}
+  .wrap{max-width:640px;margin:0 auto;padding:18px 16px 56px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  h1{font-size:1.45rem;margin:0;letter-spacing:.03em}
+  h1 small{display:block;font-size:.75rem;color:var(--muted);letter-spacing:.05em}
+  .num{font-family:"Nunito",sans-serif;font-weight:800}
+  .bar{display:flex;align-items:center;gap:10px;margin:6px 0 16px}
+  .stars{flex:1;display:flex;gap:4px}
+  .stars i{flex:1;height:10px;border-radius:99px;background:var(--line);transition:background .3s}
+  .stars i.on{background:var(--pink)} .stars i.half{background:var(--sun)} .stars i.cur{background:var(--lav)}
+  .score{background:var(--sun-soft);border-radius:99px;padding:2px 12px;font-size:.9rem;white-space:nowrap}
+  .card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
+  .owlrow{display:flex;align-items:flex-end;gap:10px;margin-bottom:12px}
+  .bubble{position:relative;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:8px 13px;font-size:.92rem}
+  .bubble:before{content:"";position:absolute;left:-9px;bottom:12px;border:8px solid transparent;border-right-color:var(--line);border-left:0}
+  .owl{width:58px;height:58px;flex:none;transition:transform .3s}
+  .owl.happy{animation:hop .6s ease 2} .owl.sad{animation:wob .5s ease 2}
+  @keyframes hop{50%{transform:translateY(-10px) rotate(-6deg)}}
+  @keyframes wob{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .chip{font-size:.78rem;padding:2px 10px;border-radius:99px;background:var(--lav-soft)}
+  .chip.y{background:var(--mint-soft)}
+  .abstract{font-size:1.02rem;margin:0}
+  label{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:18px 0 6px;font-size:.95rem}
+  .hintbtn{font:inherit;font-size:.78rem;border:2px dashed var(--pink);background:none;color:var(--pink);border-radius:99px;padding:1px 10px;cursor:pointer;white-space:nowrap}
+  .hintbtn:disabled{opacity:.45;cursor:default}
+  .clue{font-family:"Nunito",monospace;letter-spacing:.06em;font-size:.85rem;color:var(--muted);margin:-2px 2px 6px;word-break:break-word}
+  .in{width:100%;font:inherit;font-size:16px;padding:12px 15px;border:2px solid var(--line);border-radius:16px;background:var(--card);color:var(--ink)}
+  .in:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 4px var(--pink-soft)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .btn{font:inherit;font-size:1rem;background:var(--pink);color:#fff;border:0;border-radius:16px;padding:11px 22px;cursor:pointer;box-shadow:0 4px 0 #e06d92;transition:transform .08s}
+  .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #e06d92}
+  .btn.ghost{background:var(--card);color:var(--muted);border:2px solid var(--line);box-shadow:none}
   .btn:disabled{opacity:.5;cursor:default}
-  .cmp{width:100%;border-collapse:collapse;margin-top:8px;font-size:.88rem}
-  .cmp th{text-align:left;vertical-align:top;width:3.5em;color:var(--muted);font-weight:500;padding:6px 0}
-  .cmp td{padding:6px 0;border-top:1px solid var(--line)}
-  .ok{color:var(--ok);font-weight:700}.half{color:var(--accent);font-weight:700}.no{color:var(--bad);font-weight:700}
-  .tag{display:inline-block;font-size:.7rem;padding:0 6px;border-radius:6px;background:var(--card);border:1px solid var(--line);color:var(--accent)}
+  .result{margin-top:16px;display:none;animation:pop .35s ease}
+  .result.show{display:block}
+  @keyframes pop{from{transform:scale(.95);opacity:0}}
+  .verdict{font-size:1.15rem}
+  .cmp{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:.88rem}
+  .cmp th{text-align:left;vertical-align:top;width:3.2em;color:var(--muted);font-weight:400;padding:7px 0}
+  .cmp td{padding:7px 0;border-top:2px dotted var(--line);word-break:break-word}
+  .ok{color:#2f9e7a} .half{color:#d99a00} .no{color:var(--pink)}
+  .answer{background:var(--mint-soft);border-radius:16px;padding:12px 14px;margin-top:10px}
+  .answer .t{font-family:"Nunito","Noto Sans TC",sans-serif;font-weight:800;line-height:1.4}
+  .m{font-size:.84rem;color:var(--muted)}
+  .center{text-align:center}
+  .big{font-family:"Nunito",sans-serif;font-weight:800;font-size:2.6rem;margin:4px 0;color:var(--pink)}
+  .review{text-align:left;margin:16px 0 0;padding-left:1.3em;font-size:.84rem}
+  .review li{margin-bottom:7px}
+  .note{font-size:.75rem;color:var(--muted);margin-top:22px;line-height:1.6}
+  .confetti{position:fixed;top:-12px;width:9px;height:14px;border-radius:3px;pointer-events:none;animation:fall 1.6s ease-in forwards;z-index:9}
+  @keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.7}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>國關論文猜猜看</h1>
-    <div class="stat">第 <b id="rnd">1</b>/<span id="tot">10</span> 題 · 分數 <b id="score">0</b></div>
+    <svg class="owl" id="owlHead" viewBox="0 0 64 64" aria-hidden="true">
+      <ellipse cx="32" cy="38" rx="22" ry="21" fill="#c9a37a"/>
+      <path d="M12 22 L18 8 L26 18 Z M52 22 L46 8 L38 18 Z" fill="#b08660"/>
+      <ellipse cx="32" cy="44" rx="13" ry="12" fill="#f3dfc3"/>
+      <circle cx="23" cy="30" r="9" fill="#fff"/><circle cx="41" cy="30" r="9" fill="#fff"/>
+      <circle cx="24" cy="31" r="4" fill="#4a3b52"/><circle cx="40" cy="31" r="4" fill="#4a3b52"/>
+      <circle cx="25.5" cy="29.5" r="1.3" fill="#fff"/><circle cx="41.5" cy="29.5" r="1.3" fill="#fff"/>
+      <path d="M29 37 L35 37 L32 42 Z" fill="#ffb347"/>
+      <circle cx="16" cy="40" r="3.5" fill="#ff8fb1" opacity=".55"/><circle cx="48" cy="40" r="3.5" fill="#ff8fb1" opacity=".55"/>
+      <rect x="18" y="5" width="28" height="5" rx="1.5" fill="#4a3b52"/><path d="M22 10 L42 10 L40 16 L24 16 Z" fill="#4a3b52"/>
+      <path d="M44 7 L50 14" stroke="#ffc857" stroke-width="2" stroke-linecap="round"/><circle cx="50.5" cy="15" r="2" fill="#ffc857"/>
+    </svg>
+    <h1>國關論文猜猜看<small>和貓頭鷹教授一起讀頂刊</small></h1>
   </header>
+  <div class="bar"><div class="stars" id="stars"></div><div class="score">⭐ <span class="num" id="score">0</span> 分</div></div>
   <main id="app"></main>
-  <p class="note">題庫：2016–2024 年間發表於國關／安全研究期刊的高引用論文，共 26 篇。2021 年以前的篇目 Google Scholar 引用數普遍逾 200；2022 年後的新作是同期引用最多的一批，但因發表時間較短，未必都已達 200。引用數未經即時查證。摘要為重新改寫的中文概述，非原文摘要。計分：標題（或冒號前的主標題）關鍵字吻合 75% 以上 +2、40% 以上 +1；作者全猜中 +2、猜中部分 +1；拼錯一個字母也算對；看提示 −1。</p>
+  <p class="note">題庫：2016–2023 年刊登於國關頂刊 <i>International Organization</i> 與 <i>International Security</i>、Google Scholar 引用數普遍逾 200 的論文（共 25 篇；最新一篇 2023 年作品可能尚未達 200，引用數未經即時查證）。摘要為重新改寫的中文概述，非原文摘要。<br>計分：標題吻合一半以上關鍵字（或冒號前的主標題）＋2、四分之一以上＋1；作者猜中任一位姓氏就＋2；拼錯一兩個字母也算對。每個提示 −1，每題最低 0 分。</p>
 </div>
 
 <script>
@@ -74,32 +99,20 @@ const DB = [
   s:"作者認為冷戰後由美國主導的自由主義國際秩序從一開始就注定失敗。推動民主擴散、超全球化與擴大國際制度的政策，反而激起民族主義與主權反彈，並助長中國崛起。未來世界將走向由大國各自領導、相互競爭的有限秩序。"},
  {t:"Weaponized Interdependence: How Global Economic Networks Shape State Coercion", a:"Henry Farrell & Abraham L. Newman", j:"International Security", y:2019,
   s:"全球金融與通訊網絡並非扁平分散，而是呈現少數樞紐高度集中的結構。掌握這些樞紐的國家可以藉由「全景監控」取得情報，或以「咽喉點」切斷對手的使用。文章以 SWIFT、美元清算與網際網路基礎設施說明這種新型強制力。"},
- {t:"The End of Liberal International Order?", a:"G. John Ikenberry", j:"International Affairs", y:2018,
-  s:"文章探討戰後自由主義秩序是否走到盡頭。作者指出危機主要源自秩序內部——西方民主國家的社會契約鬆動與美國領導意願下降——而非外部挑戰者。但開放、規則為基礎的合作邏輯仍具韌性，未來可能以較低調的形式延續。"},
  {t:"Challenges to the Liberal Order: Reflections on International Organization", a:"David A. Lake, Lisa L. Martin & Thomas Risse", j:"International Organization", y:2021,
   s:"這篇是期刊 75 週年特刊的導論。作者區分自由秩序的經濟、政治與制度面向，梳理來自內部民粹主義與外部崛起強權的雙重挑戰，並反思學界自身理論在理解秩序變遷上的盲點。"},
  {t:"The Behavioral Revolution and International Relations", a:"Emilie M. Hafner-Burton, Stephan Haggard, David A. Lake & David G. Victor", j:"International Organization", y:2017,
   s:"行為經濟學與心理學的發現——有限理性、偏誤、偏好不穩定——對國關的理性選擇模型構成挑戰。作者盤點這波研究，主張關鍵在於辨識何時、在哪些菁英或決策情境下行為偏差會系統性地影響國際結果。"},
- {t:"Artificial Intelligence, International Competition, and the Balance of Power", a:"Michael C. Horowitz", j:"Texas National Security Review", y:2018,
-  s:"人工智慧更像是電力或內燃機這類「賦能技術」，而非單一武器。作者分析 AI 會如何影響軍事權力擴散：若關鍵在商業部門與資料，後進國家可能較快追趕；若需要大規模組織轉型，既有強權的優勢反而會被放大。"},
  {t:"China in a World of Orders: Rethinking Compliance and Challenge in Beijing's International Relations", a:"Alastair Iain Johnston", j:"International Security", y:2019,
   s:"「中國挑戰自由國際秩序」是個過於籠統的說法。作者把秩序拆成軍事、政治發展、社會、貿易、金融、環境等多個領域，逐一檢視中國的行為，發現在許多領域中國是支持甚至受益者，只有少數領域呈現明顯挑戰。"},
  {t:"Domestic Politics, China's Rise, and the Future of the Liberal International Order", a:"Jessica Chen Weiss & Jeremy L. Wallace", j:"International Organization", y:2021,
   s:"中國對國際秩序的立場，取決於其國內威權統治的需求。作者主張北京主要在意讓世界「對威權安全」，而非輸出自身模式；它會反對威脅政權存續的規範，同時對有利於國內成長的經濟制度保持參與。"},
  {t:"The Song Remains the Same: International Relations After COVID-19", a:"Daniel W. Drezner", j:"International Organization", y:2020,
   s:"許多人預言新冠疫情將徹底改變世界政治。作者回顧歷史上的大流行病，認為疫情對國際關係的影響其實有限，比較可能加速既有趨勢——大國競爭、民族主義、全球治理疲弱——而非創造全新格局。"},
- {t:"After Liberal Hegemony: The Advent of a Multiplex World Order", a:"Amitav Acharya", j:"Ethics & International Affairs", y:2017,
-  s:"美國主導的自由霸權正在退場，但取而代之的不會是單純的多極體系。作者以「多廳影城」作比喻，描述一個由多元行為者、多種秩序觀與區域安排並存的世界，強調非西方力量與區域主義的角色。"},
- {t:"International Organizations in a New Era of Populist Nationalism", a:"Mark Copelovitch & Jon C. W. Pevehouse", j:"Review of International Organizations", y:2019,
-  s:"英國脫歐與川普當選代表民粹民族主義對多邊主義的反撲。這篇特刊導論檢視民粹主義者為何敵視國際組織、他們能造成多大破壞，以及國際組織在制度設計上可能如何回應。"},
- {t:"Contested World Order: The Delegitimation of International Governance", a:"Liesbet Hooghe, Tobias Lenz & Gary Marks", j:"Review of International Organizations", y:2019,
-  s:"國際組織權威擴張後，正當性問題隨之政治化。作者從後功能主義視角出發，主張當國際治理觸及國家認同與主權時，民族主義動員會引發反彈，使國際組織的正當性遭到侵蝕。"},
  {t:"The New Era of Counterforce: Technological Change and the Future of Nuclear Deterrence", a:"Keir A. Lieber & Daryl G. Press", j:"International Security", y:2017,
   s:"精準打擊與感測技術的進步，正在削弱核武報復力量的生存性。作者指出藏匿、加固與機動等傳統防護手段變得愈來愈脆弱，「相互保證毀滅」不再是理所當然，這將影響危機穩定與軍備競賽。"},
  {t:"What Is the Cyber Offense-Defense Balance? Conceptions, Causes, and Assessment", a:"Rebecca Slayton", j:"International Security", y:2016,
   s:"「網路空間攻擊占優」是廣為流傳的看法。作者提出以成本與效用評估攻防平衡的方法，強調組織能力與技能比技術本身更關鍵，並以震網病毒為例，說明攻擊方的實際成本遠比想像高。"},
- {t:"The Logic of Coercion in Cyberspace", a:"Erica D. Borghard & Shawn W. Lonergan", j:"Security Studies", y:2017,
-  s:"網路手段能否用來脅迫對手？作者分析脅迫成功所需的條件——清楚傳達威脅、可信度、展示能力與保證——並指出網路行動的隱密性與一次性，使其在這些條件上先天不利，因此作為獨立脅迫工具的效果有限。"},
  {t:"Why China Has Not Caught Up Yet: Military-Technological Superiority and the Limits of Imitation, Reverse Engineering, and Cyber Espionage", a:"Andrea Gilli & Mauro Gilli", j:"International Security", y:2019,
   s:"許多人擔心網路竊密能讓後進國家迅速複製先進武器。作者以戰鬥機研發為例，指出現代武器系統的複雜度極高，關鍵在於難以竊取的隱性知識與工程經驗，因此模仿與逆向工程很難縮短軍事技術差距。"},
  {t:"Struggles for Recognition: The Liberal International Order and the Merger of Its Discontents", a:"Rebecca Adler-Nissen & Ayşe Zarakol", j:"International Organization", y:2021,
@@ -110,110 +123,147 @@ const DB = [
   s:"民意真的會影響民主國家的用兵決策嗎？作者在以色列國會議員身上進行調查實驗，發現民意支持會顯著提高議員贊成動武的意願，主要機制是對選舉後果的顧慮，以及民意本身帶來的資訊與正當性。"},
  {t:"The Power of Nations: Measuring What Matters", a:"Michael Beckley", j:"International Security", y:2018,
   s:"GDP 與軍費等常用指標會嚴重誤判國家實力，因為它們只看總量、忽略維持人口與安全所需的成本。作者主張以「淨資源」衡量權力，並據此重新評估歷史上的大國競爭，以及美中之間的真實差距。"},
- {t:"Why Russia Attacked Ukraine: Strategic Culture and Radicalized Narratives", a:"Elias Götz & Jørgen Staun", j:"Contemporary Security Policy", y:2022, recent:true,
-  s:"單看北約東擴或普丁個人都不足以解釋全面入侵。作者從俄羅斯的戰略文化切入：歷史上屢遭西方入侵造成的脆弱感，加上對周邊地區的勢力範圍意識，讓有限的西方舉動被解讀為生存威脅，並在菁英論述中逐步激進化，最終為戰爭創造了條件。"},
- {t:"The Causes and Consequences of the Ukraine War", a:"John J. Mearsheimer", j:"Horizons", y:2022, recent:true,
-  s:"這篇由演講改寫的文章挑戰西方主流說法，主張美國把烏克蘭拉進北約、使其成為俄國邊境上的西方堡壘，才是危機的主因；俄國的動機是安全而非擴張。作者並警告戰爭可能長期化，甚至有升級為北約直接參戰或動用核武的風險。"},
- {t:"Imperialism, Supremacy, and the Russian Invasion of Ukraine", a:"Kseniya Oksamytna", j:"Contemporary Security Policy", y:2023, recent:true,
-  s:"作者批評國關學界過度從大國安全競爭解讀這場戰爭，忽略了俄國菁英對烏克蘭根深蒂固的帝國式與優越感觀點。她主張正視帝國主義、結合後殖民研究與區域知識，才能理解俄國為何執意征服烏克蘭，以及為何多數觀察者低估了烏克蘭的抵抗。"},
- {t:"Dual Use Deception: How Technology Shapes Cooperation in International Relations", a:"Jane Vaynman & Tristan A. Volpe", j:"International Organization", y:2023, recent:true,
+ {t:"Dual Use Deception: How Technology Shapes Cooperation in International Relations", a:"Jane Vaynman & Tristan A. Volpe", j:"International Organization", y:2023,
   s:"為什麼有些軍事技術容易達成軍控協議，有些卻幾乎不可能？作者指出關鍵在於技術的軍民兩用特性：當軍用與民用難以區分、又深度嵌入民間經濟時，查核就必須高度侵入，國家因此陷入「透明度與安全」的兩難，合作也就難以成形。"},
- {t:"Three Worlds: The West, East and South and the Competition to Shape Global Order", a:"G. John Ikenberry", j:"International Affairs", y:2024, recent:true,
-  s:"俄烏戰爭把世界推向三個鬆散陣營：全球西方、全球東方與全球南方。它們不是嚴密的集團，而是對理想秩序各有主張的派系。作者認為東西雙方將競相爭取南方的支持，而西方若想維持核心地位，就必須調整自身、接納更多元的世界。"},
- {t:"The Global Governance of Artificial Intelligence: Next Steps for Empirical and Normative Research", a:"Jonas Tallberg, Eva Erman, Markus Furendal, Johannes Geith, Mark Klamberg & Magnus Lundgren", j:"International Studies Review", y:2023, recent:true,
-  s:"政治學與國關對 AI 的研究多半聚焦在應用，較少關注正在形成的全球規範架構。作者提出一套研究議程：一方面以實證方法描繪並解釋 AI 如何在全球層次被治理、由誰推動；另一方面以規範理論檢驗這些安排是否符合正義與民主的標準。"}
+ {t:"Would China Go Nuclear? Assessing the Risk of Chinese Nuclear Escalation in a Conventional War with the United States", a:"Caitlin Talmadge", j:"International Security", y:2017,
+  s:"美中若爆發常規戰爭，美軍很可能打擊中國的常規飛彈、雷達與指揮系統。作者指出，這些目標與中國核力量高度交織，北京可能誤以為自己的核報復能力正遭削弱，因此一場「只打常規」的戰爭也可能意外升級為核衝突。"},
+ {t:"Dangerous Confidence? Chinese Views on Nuclear Escalation", a:"Fiona S. Cunningham & M. Taylor Fravel", j:"International Security", y:2019,
+  s:"作者透過訪談與中文文獻，整理中國戰略界對核升級的看法。他們發現北京普遍相信美中衝突能維持在常規層級、核升級風險很低。這種過度自信可能讓中國在危機中更敢冒險，反而增加意外升級的危險。"},
+ {t:"China's Grand Strategy under Xi Jinping: Reassurance, Reform, and Resistance", a:"Avery Goldstein", j:"International Security", y:2020,
+  s:"習近平時期的中國大戰略比過去更積極，但並非單純的擴張。作者歸納出三個並行的手段：安撫周邊與大國、推動國際制度往有利方向改革，以及抵抗被視為威脅核心利益的壓力，三者共同服務於民族復興的目標。"},
+ {t:"COVID-19 and the Politics of Crisis", a:"Phillip Y. Lipscy", j:"International Organization", y:2020,
+  s:"作者把新冠疫情放進「危機政治」的框架：危機的特徵是威脅大、時間緊迫、充滿不確定。這三項特性如何組合，影響了各國政府的反應速度與政策選擇，也說明為何國際協調在這次疫情中特別困難。"},
+ {t:"Health Diplomacy in Pandemical Times", a:"Tanisha M. Fazal", j:"International Organization", y:2020,
+  s:"國際衛生合作曾有不少成功先例，但新冠疫情期間的衛生外交卻顯得分裂乏力。作者回顧全球衛生治理的演變，分析民族主義、大國競爭與國際衛生組織的權威不足，如何削弱了各國在大流行中的合作。"},
+ {t:"The Janus Face of the Liberal International Information Order: When Global Institutions Are Self-Undermining", a:"Henry Farrell & Abraham L. Newman", j:"International Organization", y:2021,
+  s:"自由主義的國際資訊秩序強調資訊自由流動，原本被視為有利民主擴散。作者指出這種開放性也有另一張臉：威權國家與反自由行動者可以利用它散播假訊息、干預選舉，使這套制度反過來侵蝕支撐它的民主國家。"},
+ {t:"Rising Inequality As a Threat to the Liberal International Order", a:"Thomas M. Flaherty & Ronald Rogowski", j:"International Organization", y:2021,
+  s:"先進民主國家內部的不平等快速擴大，與貿易、資本流動和技術變遷密切相關。作者主張這種分配衝擊引發了民粹與保護主義的反彈，讓自由國際秩序面臨的最大威脅其實來自內部，而不只是外部的崛起強權。"},
+ {t:"America and the Trade Regime: What Went Wrong?", a:"Judith Goldstein & Robert Gulotty", j:"International Organization", y:2021,
+  s:"美國一手打造了戰後的多邊貿易體制，為何後來卻轉而攻擊它？作者從體制設計切入，指出 WTO 規則難以處理中國等新型經濟體，加上美國國內決策結構的變化，使貿易體制在美國逐漸失去政治支持。"},
+ {t:"Embedded Liberalism in the Digital Era", a:"Edward D. Mansfield & Nita Rudra", j:"International Organization", y:2021,
+  s:"戰後「開放市場搭配國內社會保障」的妥協，讓全球化得以延續。作者認為數位經濟帶來新的贏家與輸家，跨境資料與平台經濟也挑戰既有規則；若要維持開放，必須重新設計適合數位時代的補償與治理安排。"},
+ {t:"The Distribution of Identity and the Future of International Order: China's Hegemonic Prospects", a:"Bentley B. Allan, Srdjan Vucetic & Ted Hopf", j:"International Organization", y:2018,
+  s:"霸權秩序不只靠物質實力，也需要與各國社會的主流認同相契合。作者建立跨國的國家認同資料，比較西方自由民主認同與中國模式在各國的接受程度，認為中國短期內難以提供足以支撐新霸權的認同基礎。"}
 ];
 
 const ROUNDS = 10;
-let deck=[], i=0, score=0, hintUsed=false, picked={t:null,a:null}, log=[];
+let deck=[], i=0, score=0, hintCost=0, log=[];
 const $ = id => document.getElementById(id);
 const shuffle = a => { a=[...a]; for(let k=a.length-1;k>0;k--){const r=Math.floor(Math.random()*(k+1));[a[k],a[r]]=[a[r],a[k]];} return a; };
 const esc = s => s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const jShort = j => j==="International Organization" ? "IO" : "IS";
 
-function start(){
-  deck = shuffle(DB).slice(0, ROUNDS); i=0; score=0; log=[];
-  $("tot").textContent = ROUNDS; render();
-}
-
-const STOP=new Set("the a an of and in to for on how what is are its after about from with into beyond than why when does do".split(" "));
+/* ---------- 比對 ---------- */
+const STOP=new Set("the a an of and in to for on how what is are its after about from with into beyond than why when does do would".split(" "));
 const norm=x=>x.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/ı/g,"i").replace(/ø/g,"o").replace(/ß/g,"ss").toLowerCase();
-function lev(a,b){const m=a.length,n=b.length;if(Math.abs(m-n)>1)return 2;const d=Array.from({length:m+1},(_,r)=>[r]);for(let c=1;c<=n;c++)d[0][c]=c;
+function lev(a,b){const m=a.length,n=b.length;if(Math.abs(m-n)>2)return 3;const d=Array.from({length:m+1},(_,r)=>[r]);for(let c=1;c<=n;c++)d[0][c]=c;
   for(let r=1;r<=m;r++)for(let c=1;c<=n;c++)d[r][c]=Math.min(d[r-1][c]+1,d[r][c-1]+1,d[r-1][c-1]+(a[r-1]===b[c-1]?0:1));return d[m][n];}
-const close=(w,u)=>w===u||(w.length>=5&&u.length>=5&&(lev(w,u)<=1||w.slice(0,6)===u.slice(0,6)));
+const close=(w,u)=>w===u||(w.length>=4&&u.length>=4&&(lev(w,u)<=(w.length>=8?2:1)||w.slice(0,5)===u.slice(0,5)));
 const words=x=>norm(x).replace(/-/g," ").split(/[^a-z0-9]+/).filter(w=>w.length>2&&!STOP.has(w)).map(w=>w.replace(/s$/,""));
-
-function ratio(guessWords,t){const key=[...new Set(words(t))];return key.filter(w=>guessWords.some(u=>close(w,u))).length/key.length;}
+function ratio(g,t){const key=[...new Set(words(t))];return key.length?key.filter(w=>g.some(u=>close(w,u))).length/key.length:0;}
 function scoreTitle(guess,t){
   const g=words(guess); if(!g.length) return {pts:0,r:0};
   const main=t.split(":")[0], r=Math.max(ratio(g,t), main!==t?ratio(g,main):0);
-  return {pts:r>=.75?2:r>=.4?1:0, r};
+  return {pts:r>=.5?2:r>=.25?1:0, r};
 }
-function surnames(a){return a.split(/,|&/).map(x=>x.trim()).filter(Boolean).map(n=>norm(n.split(/\s+/).pop()).replace(/[^a-z]/g,""));}
+const surnames=a=>a.split(/,|&/).map(x=>x.trim()).filter(Boolean).map(n=>norm(n.split(/\s+/).pop()).replace(/[^a-z]/g,""));
 function scoreAuthor(guess,a){
   const sn=surnames(a), g=norm(guess), compact=g.replace(/[^a-z]/g,""), toks=g.replace(/-/g,"").split(/[^a-z]+/).filter(Boolean);
   const hit=sn.filter(s=>(s.length>=4&&compact.includes(s))||toks.some(u=>close(s,u))).length;
-  return {pts:hit===sn.length?2:hit>0?1:0, hit, n:sn.length};
+  return {pts:hit>0?2:0, hit, n:sn.length};
 }
+
+/* ---------- 提示 ---------- */
+const titleClue=t=>t.split(/(\s+)/).map(w=>/\s/.test(w)?w:w.replace(/([A-Za-zÀ-ž])([A-Za-zÀ-ž'’\-]*)/,(m,f,rest)=>f+rest.replace(/[A-Za-zÀ-ž'’]/g,"_"))).join("");
+const authorClue=a=>a.split(/(,\s*|\s*&\s*)/).map(p=>/^(,\s*|\s*&\s*)$/.test(p)?p:p.split(/\s+/).map((w,k,arr)=>k===arr.length-1?w[0]+w.slice(1).replace(/[^\-]/g,"_"):w[0]+".").join(" ")).join("");
+
+/* ---------- 貓頭鷹 ---------- */
+const OWL=$("owlHead").outerHTML.replace('id="owlHead"','id="owl"');
+const LINES={start:["這篇我超愛的，你讀過嗎？","慢慢想，不急～","提示：先猜作者通常比較簡單喔！","看到關鍵字就打打看吧！"],
+  full:["太厲害了！你是國關活字典 ✨","完全正確！給你一顆星星 ⭐","哇！這篇你一定讀得很熟～"],
+  half:["差一點點！已經很棒了～","有抓到重點喔！","很接近了，加油加油！"],
+  zero:["沒關係，這篇比較冷門～","下一題一定可以！","記下來，下次就會了 📚"]};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function say(text,mood){ $("say").textContent=text; const o=$("owl"); o.classList.remove("happy","sad"); void o.offsetWidth; if(mood) o.classList.add(mood); }
+
+function drawStars(){
+  $("stars").innerHTML=Array.from({length:ROUNDS},(_,k)=>{const l=log[k];return `<i class="${l?(l.tp+l.ap>=4?"on":l.tp+l.ap>0?"half":""):(k===i?"cur":"")}"></i>`}).join("");
+  $("score").textContent=score;
+}
+
+function start(){ deck=shuffle(DB).slice(0,ROUNDS); i=0; score=0; log=[]; render(); }
 
 function render(){
-  const it = deck[i]; hintUsed=false;
-  $("rnd").textContent=i+1; $("score").textContent=score;
-  $("app").innerHTML = `
+  const it=deck[i]; hintCost=0; drawStars();
+  $("app").innerHTML=`
     <div class="card">
-      <div class="label">摘要</div>
+      <div class="owlrow">${OWL}<div class="bubble" id="say"></div></div>
+      <div class="chips"><span class="chip">第 <span class="num">${i+1}</span> / ${ROUNDS} 題</span><span class="chip y">📖 ${esc(it.j)} · ${it.y}</span></div>
       <p class="abstract">${esc(it.s)}</p>
-      <div class="hint" id="hint"><button id="hintBtn">看提示：期刊與年份（−1）</button></div>
     </div>
     <form id="f" autocomplete="off">
-      <h2>標題（英文，主標題對就算全對）</h2>
-      <input class="in" id="gT" placeholder="例如：Weaponized Interdependence…" autocapitalize="off" spellcheck="false">
-      <h2>作者（姓氏即可，多位作者用逗號分隔）</h2>
-      <input class="in" id="gA" placeholder="例如：Farrell, Newman" autocapitalize="off" spellcheck="false">
-      <div class="row"><button class="btn" type="submit">送出</button><button class="btn ghost" type="button" id="skip">放棄，看答案</button></div>
+      <label>📝 標題是什麼？<button class="hintbtn" type="button" id="hT">首字母提示 −1</button></label>
+      <div class="clue" id="cT"></div>
+      <input class="in" id="gT" placeholder="打出記得的關鍵字就好，例如 Weaponized…" autocapitalize="off" spellcheck="false">
+      <label>👩‍🏫 作者是誰？<button class="hintbtn" type="button" id="hA">姓名提示 −1</button></label>
+      <div class="clue" id="cA"></div>
+      <input class="in" id="gA" placeholder="猜中任一位的姓氏就得分，例如 Farrell" autocapitalize="off" spellcheck="false">
+      <div class="row"><button class="btn" type="submit">送出答案 ✨</button><button class="btn ghost" type="button" id="skip">投降，看答案</button></div>
     </form>
     <div class="result" id="res"></div>`;
-  $("hintBtn").onclick = () => { hintUsed=true; $("hint").innerHTML = `<span class="reveal">${esc(it.j)}，${it.y}</span>`; };
-  $("f").onsubmit = e => { e.preventDefault(); finishRound(it, $("gT").value, $("gA").value); };
-  $("skip").onclick = () => finishRound(it, "", "");
-  $("gT").focus({preventScroll:true});
+  say(pick(LINES.start));
+  $("hT").onclick=e=>{hintCost++; e.target.disabled=true; $("cT").textContent=titleClue(it.t); say("給你偷看一下開頭字母～");};
+  $("hA").onclick=e=>{hintCost++; e.target.disabled=true; $("cA").textContent=authorClue(it.a); say("名字的第一個字母在這裡喔！");};
+  $("f").onsubmit=e=>{e.preventDefault(); finishRound(it,$("gT").value,$("gA").value);};
+  $("skip").onclick=()=>finishRound(it,"","");
 }
 
-const verdict=p=>p===2?'<span class="ok">✓ 正確</span>':p===1?'<span class="half">◐ 部分正確</span>':'<span class="no">✗</span>';
+const verdict=p=>p===2?'<b class="ok">✓ 答對了</b>':p===1?'<b class="half">◐ 部分正確</b>':'<b class="no">✗ 沒猜中</b>';
 
-function finishRound(it, gT, gA){
-  const T=scoreTitle(gT,it.t), A=scoreAuthor(gA,it.a);
-  let pts = T.pts + A.pts - (hintUsed?1:0);
-  score += pts; $("score").textContent=score;
-  log.push({it, tp:T.pts, ap:A.pts, pts});
-  document.querySelectorAll("#f input, #f button").forEach(x=>x.disabled=true);
-  const msg = T.pts+A.pts===4 ? "全對！" : T.pts+A.pts>0 ? "有猜到一些" : "這題沒猜中";
-  const res = $("res");
-  res.innerHTML = `<div><b>${msg}</b> <span class="pts">${pts>=0?"+":""}${pts} 分</span></div>
+function finishRound(it,gT,gA){
+  const T=scoreTitle(gT,it.t), A=scoreAuthor(gA,it.a), raw=T.pts+A.pts;
+  const pts=Math.max(0,raw-hintCost);
+  score+=pts; log.push({it,tp:T.pts,ap:A.pts,pts});
+  document.querySelectorAll("#f input,#f button").forEach(x=>x.disabled=true);
+  const mood=raw===4?"full":raw>0?"half":"zero";
+  say(pick(LINES[mood]), raw>0?"happy":"sad");
+  if(raw===4) confetti();
+  drawStars();
+  const res=$("res");
+  res.innerHTML=`<div class="card">
+    <div class="verdict">${raw===4?"🎉 全對！":raw>0?"🌱 有猜到！":"🍂 這題沒猜中"} <span class="num">+${pts}</span> 分</div>
     <table class="cmp">
-      <tr><th>標題</th><td>${gT.trim()?esc(gT):'<span class="m">（未作答）</span>'}<br>${verdict(T.pts)} <span class="m">關鍵字吻合 ${Math.round(T.r*100)}%</span></td></tr>
-      <tr><th>作者</th><td>${gA.trim()?esc(gA):'<span class="m">（未作答）</span>'}<br>${verdict(A.pts)} <span class="m">猜中 ${A.hit}/${A.n} 位</span></td></tr>
+      <tr><th>標題</th><td>${gT.trim()?esc(gT):'<span class="m">（沒作答）</span>'}<br>${verdict(T.pts)} <span class="m">關鍵字吻合 ${Math.round(T.r*100)}%</span></td></tr>
+      <tr><th>作者</th><td>${gA.trim()?esc(gA):'<span class="m">（沒作答）</span>'}<br>${verdict(A.pts)} <span class="m">猜中 ${A.hit}/${A.n} 位</span></td></tr>
     </table>
-    <div class="label" style="margin-top:12px">正確答案</div>
-    <div class="t">${esc(it.t)}</div>
-    <div class="m">${esc(it.a)} · <i>${esc(it.j)}</i>, ${it.y}${it.recent?' · <span class="tag">2022 後新作</span>':''}</div>
-    <button class="btn" id="next">${i+1<ROUNDS?"下一題":"看結果"}</button>`;
+    <div class="answer"><div class="m">正確答案</div><div class="t">${esc(it.t)}</div><div class="m">${esc(it.a)} · <i>${esc(it.j)}</i>, ${it.y}</div></div>
+    <div class="row"><button class="btn" id="next">${i+1<ROUNDS?"下一題 →":"看成績單 🏆"}</button></div></div>`;
   res.classList.add("show");
-  $("next").onclick = () => { i++; i<ROUNDS ? render() : end(); window.scrollTo({top:0,behavior:"smooth"}); };
-  $("next").focus({preventScroll:true});
-  res.scrollIntoView({behavior:"smooth", block:"nearest"});
+  $("next").onclick=()=>{i++; i<ROUNDS?render():end(); window.scrollTo({top:0,behavior:"smooth"});};
+  res.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 
 function end(){
-  const max = ROUNDS*4, pct = score/max;
-  const title = pct>=.85?"國關期刊活字典":pct>=.6?"資深研究生":pct>=.35?"文獻回顧進行中":"該去圖書館了";
+  log.length===ROUNDS && (i=ROUNDS); drawStars();
+  const max=ROUNDS*4, pct=score/max;
+  const [title,line]=pct>=.8?["🏅 國關頂刊活字典","教授我都要拜你為師了！"]:pct>=.55?["🎓 優秀研究生","離博士資格考只差一步～"]:pct>=.3?["📚 認真的大學生","再多讀幾篇就會更厲害！"]:["🐣 國關新手村","一起去圖書館吧！"];
   const mk=p=>p===2?"✓":p===1?"◐":"✗";
-  $("app").innerHTML = `<div class="card center">
-    <div class="label">最終成績</div>
-    <div class="big">${score} / ${max}</div>
-    <div><b>${title}</b></div>
-    <ol class="review">${log.map(l=>`<li>${mk(l.tp)}標題 ${mk(l.ap)}作者 — <i>${esc(l.it.t)}</i>（${esc(l.it.a)}）</li>`).join("")}</ol>
-    <button class="btn" id="again">再玩一輪</button></div>`;
-  $("again").onclick = start;
+  $("app").innerHTML=`<div class="card center">
+    <div class="owlrow" style="justify-content:center">${OWL}<div class="bubble" id="say"></div></div>
+    <div class="m">最終成績</div><div class="big">${score} / ${max}</div><div><b>${title}</b></div>
+    <ol class="review">${log.map(l=>`<li>${mk(l.tp)}標題 ${mk(l.ap)}作者 — <i>${esc(l.it.t)}</i>（${esc(l.it.a)}, ${jShort(l.it.j)} ${l.it.y}）</li>`).join("")}</ol>
+    <div class="row" style="justify-content:center"><button class="btn" id="again">再玩一輪 🔁</button></div></div>`;
+  say(line, pct>=.3?"happy":null);
+  if(pct>=.55) confetti();
+  $("again").onclick=start;
+}
+
+function confetti(){
+  const colors=["#ff8fb1","#ffc857","#7fd8be","#b9a7ff"];
+  for(let k=0;k<36;k++){const c=document.createElement("div");c.className="confetti";
+    c.style.left=Math.random()*100+"vw";c.style.background=colors[k%4];c.style.animationDelay=Math.random()*.4+"s";
+    document.body.appendChild(c);setTimeout(()=>c.remove(),2200);}
 }
 
 start();
